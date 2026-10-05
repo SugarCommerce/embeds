@@ -246,4 +246,57 @@ final class EmbedsTest extends TestCase {
 		$this->assertSame( 'YouTube player', $embed->title() );
 		$this->assertSame( 'YouTube preview of Midnight Drive', $embed->title( 'Midnight Drive' ) );
 	}
+
+	/* ─── Icons ──────────────────────────────────────────────────────── */
+
+	/**
+	 * Every platform, so a case added without a mark fails here.
+	 *
+	 * @return array<string, array{0: Platform}>
+	 */
+	public static function platforms(): array {
+		$cases = array();
+
+		foreach ( Platform::cases() as $platform ) {
+			$cases[ $platform->value ] = array( $platform );
+		}
+
+		return $cases;
+	}
+
+	#[DataProvider( 'platforms' )]
+	public function test_every_platform_has_a_mark( Platform $platform ): void {
+		$path = $platform->icon_path();
+
+		$this->assertNotSame( '', $path );
+		// Path data and nothing else: no markup, no quotes, no URL.
+		$this->assertMatchesRegularExpression( '/^[MmZzLlHhVvCcSsQqTtAa0-9.,\s\-]+$/', $path );
+	}
+
+	#[DataProvider( 'platforms' )]
+	public function test_every_icon_is_one_filled_path( Platform $platform ): void {
+		$svg = $platform->icon( 'h-5 w-5' );
+
+		$this->assertStringStartsWith( '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="', $svg );
+		$this->assertStringEndsWith( '"/></svg>', $svg );
+		$this->assertSame( 1, substr_count( $svg, '<path' ) );
+		$this->assertStringContainsString( $platform->icon_path(), $svg );
+	}
+
+	public function test_marks_are_distinct(): void {
+		$paths = array_map( static fn( Platform $platform ): string => $platform->icon_path(), Platform::cases() );
+
+		$this->assertSame( $paths, array_values( array_unique( $paths ) ) );
+	}
+
+	public function test_an_icon_with_no_class_has_no_class_attribute(): void {
+		$this->assertStringStartsWith( '<svg viewBox=', Platform::GitHub->icon() );
+	}
+
+	public function test_an_icon_escapes_its_class(): void {
+		$svg = Platform::X->icon( '" onload="alert(1)' );
+
+		$this->assertStringNotContainsString( '" onload', $svg );
+		$this->assertStringContainsString( 'class="&quot; onload=&quot;alert(1)"', $svg );
+	}
 }

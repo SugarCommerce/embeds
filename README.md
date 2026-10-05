@@ -21,6 +21,7 @@ The naive version of this is two lines — match a regex, interpolate into an `<
 - 🔗 **Recognition separate from embedding** — an X profile has a platform and no player; both answers are available.
 - 🛡️ **`frame-src` origins generated** from the enum, so adding a platform cannot leave a policy behind.
 - 🧩 **Fifteen platforms**, five of them embeddable.
+- 🎨 **Every platform's mark** as inline SVG, copied in from Simple Icons rather than fetched.
 
 ## Requirements
 
@@ -73,6 +74,19 @@ Build the content security policy from the same source:
 'frame-src ' . implode( ' ', Platform::origins() );
 ```
 
+## Icons
+
+Every platform carries its mark, from [Simple Icons](https://simpleicons.org) (CC0), as path data on a 24×24 grid:
+
+```php
+Platform::X->icon( 'h-5 w-5' );
+// <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14.234…"/></svg>
+
+Platform::X->icon_path();   // the path data alone, to draw your own element
+```
+
+Copied in rather than fetched, so a page showing one does not depend on a CDN being up, and nobody upstream can change what appears next to somebody's name. Filled with `currentColor`, so the mark takes the colour of the link around it; hidden from screen readers, because the link carries the name. A mark is a filled silhouette — drawn through an outline icon set's stroked element, it becomes an outline of a logo.
+
 ## Platforms
 
 | Platform | Embeddable | Notes |
@@ -92,7 +106,16 @@ Bandcamp only accepts the URL from its own embed panel. An artist page cannot be
 
 - **No network.** Nothing here fetches a URL, so nothing here can tell you whether a video exists, is private, or was deleted. It tells you the URL is well-formed and belongs to a platform on the list.
 - **No oEmbed.** That needs a request per URL and an API key for some providers. If you want a title and a thumbnail, fetch them yourself and cache them.
-- **No HTML.** You get a `src`, a ratio and a height. The iframe, its sandbox attributes and its escaping are yours — see `SECURITY.md`.
+- **No iframe.** You get a `src`, a ratio and a height. The iframe, its sandbox attributes and its escaping are yours — see `SECURITY.md`. The one piece of markup here is an icon, built from constants.
+
+## Testing
+
+```bash
+composer install
+composer test
+```
+
+72 tests — every URL shape each platform is pasted in, the lookalike hosts that must not match, ids that do not fit the pattern, the `frame-src` origins, and a mark for every platform: one filled path, distinct, with its class escaped.
 
 ## Licence
 

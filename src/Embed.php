@@ -25,9 +25,18 @@ namespace SugarCommerce\Embeds;
 final readonly class Embed {
 
 	/**
+	 * Hold an embed's parts.
+	 *
+	 * Built by Embeds::embed(). Constructing one by hand bypasses every
+	 * check that method makes, so a value built here from user input is
+	 * exactly as trustworthy as that input.
+	 *
+	 * @since 1.0.0
+	 *
 	 * @param Platform $platform Which platform this came from.
 	 * @param string   $src      The iframe source, built by this library.
-	 * @param string   $url      The canonical page URL, for a link out.
+	 * @param string   $url      The canonical page URL, for a link out, or ''
+	 *                           when it cannot be derived (a Bandcamp player).
 	 * @param string   $ratio    CSS aspect ratio, e.g. '16 / 9', or '' when
 	 *                           the player has a fixed height instead.
 	 * @param int      $height   Height in pixels, or 0 when $ratio applies.
@@ -44,6 +53,8 @@ final readonly class Embed {
 	 * Whether this embed is sized by ratio rather than by height.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return bool True when $ratio applies, false when $height does.
 	 */
 	public function responsive(): bool {
 		return '' !== $this->ratio;
@@ -55,9 +66,14 @@ final readonly class Embed {
 	 * An iframe with no title is announced as "frame" and nothing else,
 	 * which for a screen reader on a page of several is no help at all.
 	 *
+	 * Plain text, not markup: `$subject` is included as given, so escape the
+	 * result for the attribute it goes into.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $subject What the embed is of, e.g. a product name.
+	 *
+	 * @return string The title, unescaped.
 	 */
 	public function title( string $subject = '' ): string {
 		return '' === $subject

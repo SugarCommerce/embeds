@@ -54,11 +54,11 @@ enum Platform: string {
 	 * redirect to anywhere.
 	 *
 	 * Subdomains that genuinely vary — a Bandcamp artist page — are handled
-	 * in Embeds::host(), not by loosening anything here.
+	 * in Embeds::match_host(), not by loosening anything here.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array<int, string>
+	 * @return list<string> Lower-case hosts without a `www.` prefix.
 	 */
 	public function hosts(): array {
 		return match ( $this ) {
@@ -84,6 +84,8 @@ enum Platform: string {
 	 * What to call it on screen.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return string The platform's own spelling of its name.
 	 */
 	public function label(): string {
 		return match ( $this ) {
@@ -114,6 +116,8 @@ enum Platform: string {
 	 * and one that is wrong shows a black box rather than an error.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return bool True when Embeds::embed() can build a player for it.
 	 */
 	public function embeddable(): bool {
 		return match ( $this ) {
@@ -191,7 +195,7 @@ enum Platform: string {
 	 * @param string $class Classes for sizing and colour, e.g. `h-5 w-5`.
 	 *                      '' for none.
 	 *
-	 * @return string
+	 * @return string The `<svg>` element, its attributes escaped.
 	 */
 	public function icon( string $class = '' ): string {
 		return sprintf(
@@ -211,7 +215,7 @@ enum Platform: string {
 	 *
 	 * @param array<int, self> $only Limit to these platforms. Empty means all.
 	 *
-	 * @return array<int, string>
+	 * @return list<string> Distinct origins, each `https://` and no path.
 	 */
 	public static function origins( array $only = array() ): array {
 		$cases = $only ?: self::cases();

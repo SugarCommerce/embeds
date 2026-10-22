@@ -1,7 +1,7 @@
 {
   "name": "sugarcommerce/embeds",
   "description": "Turn a URL somebody pasted into an embed you can safely put in an iframe. A closed list of platforms, exact host matching, and a src rebuilt from validated parts rather than the string that arrived. Zero dependencies.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "library",
   "license": "GPL-2.0-or-later",
   "homepage": "https://github.com/sugarcommerce/embeds",

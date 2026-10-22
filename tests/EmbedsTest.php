@@ -210,6 +210,50 @@ final class EmbedsTest extends TestCase {
 		$this->assertSame( Platform::YouTube, $embed->platform );
 	}
 
+	/**
+	 * Query values that arrive percent-encoded with a trailing line break.
+	 *
+	 * The URL itself is clean — the control character only exists once the
+	 * query is decoded — and `$` in a pattern matches before a final "\n".
+	 *
+	 * @return array<string, array{0: string}>
+	 */
+	public static function trailing_newlines(): array {
+		return array(
+			'youtube v' => array( 'https://www.youtube.com/watch?v=dQw4w9WgXcQ%0A' ),
+			'vimeo h'   => array( 'https://vimeo.com/123456789?h=abc123def456%0A' ),
+		);
+	}
+
+	#[DataProvider( 'trailing_newlines' )]
+	public function test_a_decoded_trailing_newline_never_reaches_the_src( string $url ): void {
+		$this->assertNull( Embeds::embed( $url ) );
+	}
+
+	public function test_a_long_query_string_does_not_raise_a_warning(): void {
+		// Over max_input_vars, parse_str() raises E_WARNING, which an
+		// application that turns warnings into exceptions renders as a 500
+		// on every page showing the stored URL.
+		$url = 'https://www.youtube.com/watch?' . str_repeat( 'a=&', 1100 ) . 'v=dQw4w9WgXcQ';
+
+		$embed = Embeds::embed( $url );
+
+		$this->assertNotNull( $embed );
+		$this->assertSame( 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', $embed->src );
+	}
+
+	public function test_an_overlong_url_is_refused(): void {
+		$url = 'https://youtu.be/dQw4w9WgXcQ?' . str_repeat( 'a', 5000 );
+
+		$this->assertNull( Embeds::embed( $url ) );
+		$this->assertNull( Embeds::platform( $url ) );
+	}
+
+	public function test_an_array_shaped_query_value_is_ignored(): void {
+		$this->assertNull( Embeds::embed( 'https://www.youtube.com/watch?v[]=dQw4w9WgXcQ' ) );
+		$this->assertNotNull( Embeds::embed( 'https://www.youtube.com/watch?v[]=x&v=dQw4w9WgXcQ' ) );
+	}
+
 	public function test_only_restricts_which_platforms_are_accepted(): void {
 		$url = 'https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT';
 

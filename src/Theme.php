@@ -28,13 +28,26 @@ namespace SugarCommerce\Embeds;
  */
 enum Theme {
 
+	/**
+	 * A light page — white player, blue links. The default.
+	 *
+	 * @since 1.0.0
+	 */
 	case Light;
+
+	/**
+	 * A dark page — near-black player, white links.
+	 *
+	 * @since 1.0.0
+	 */
 	case Dark;
 
 	/**
 	 * Background colour for a player that accepts one, as six hex digits.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return string Six lower-case hex digits, no `#`.
 	 */
 	public function background(): string {
 		return match ( $this ) {
@@ -47,6 +60,8 @@ enum Theme {
 	 * Link and accent colour to go with it.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return string Six lower-case hex digits, no `#`.
 	 */
 	public function accent(): string {
 		return match ( $this ) {

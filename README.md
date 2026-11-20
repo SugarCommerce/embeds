@@ -117,21 +117,19 @@ link carries the name. `Platform::origins()` gives the `frame-src` list.
 * **No Bandcamp artist page.** The player's album id is in the page's HTML,
   not its URL; take the URL from Bandcamp's own Share/Embed panel.
 
-## Moving from the SugarCommerce SaaS package
+## Security
 
-From the retired `sugarcommerce/embeds` package. Everything not listed keeps
-its name and behaviour under `SugarCommerce\Embeds`.
-
-| Old | New |
-|---|---|
-| `sugarcommerce/embeds` (SaaS) | `sugarcommerce/embeds` |
-| `$embed->title( $subject )` in English | the same, translated (text domain `sugarcommerce`) |
-| An iframe written by hand from `src`, `ratio` and `height` | `$embed->html( $subject, $args )` |
-| `Platform::icon()` escaped with `htmlspecialchars()` | escaped with `esc_attr()` |
-| PHP 8.5 | PHP 8.3 |
-
-New: `Embed::html()` and `Embeds::register_handlers()`. Dropped: nothing; an
-oEmbed client was never in it, and core's covers what one would.
+* A look-alike host is not the platform: hosts are compared exactly, so `notyoutube.com` and
+  `youtube.com.evil.test` are refused, and a Bandcamp subdomain must be one DNS label
+* A URL written to be misread is refused outright: credentials (`https://youtube.com@evil.test/`), any scheme but
+  https, a port other than 443, control characters or spaces, or more than 4 KB
+* Nothing pasted reaches the page: each id is checked against a strict pattern and the `src` is built fresh from
+  it, so no query string, path or second host is carried through
+* `javascript:`, `data:` and plain http never become a player
+* The iframe escapes every attribute, is sandboxed without top navigation, forms or downloads, and sends the site's
+  origin as the referrer, never the page's path
+* No request leaves the site: there is no oEmbed fetch, so nothing here can be pointed at an internal address
+* No player sets a YouTube cookie before somebody presses play
 
 ## Requirements
 

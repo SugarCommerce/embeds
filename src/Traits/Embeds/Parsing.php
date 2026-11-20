@@ -12,7 +12,7 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Embeds\Traits\Embeds;
 
-use SugarCommerce\Embeds\Platform;
+use SugarCommerce\Embeds\Models\Platform;
 
 /**
  * Trait Parsing

@@ -117,6 +117,13 @@ link carries the name. `Platform::origins()` gives the `frame-src` list.
 * **No Bandcamp artist page.** The player's album id is in the page's HTML,
   not its URL; take the URL from Bandcamp's own Share/Embed panel.
 
+## Layout
+
+* `src/Embeds.php`: the one class you call; `src/Traits/Embeds/` holds
+  reading a link, building a player and the WordPress handlers.
+* `src/Models/`: data shapes. `Embed.php` is everything an iframe needs,
+  `Platform.php` the closed list of services and `Theme.php` light or dark.
+
 ## Security
 
 * A look-alike host is not the platform: hosts are compared exactly, so `notyoutube.com` and

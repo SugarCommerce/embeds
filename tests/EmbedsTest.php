@@ -12,7 +12,9 @@ namespace SugarCommerce\Embeds\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use SugarCommerce\Embeds\{Embeds, Platform, Theme};
+use SugarCommerce\Embeds\Embeds;
+use SugarCommerce\Embeds\Models\Platform;
+use SugarCommerce\Embeds\Models\Theme;
 
 /**
  * Class EmbedsTest

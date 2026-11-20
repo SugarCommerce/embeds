@@ -10,10 +10,10 @@ declare( strict_types=1 );
 namespace SugarCommerce\Embeds\Tests;
 
 use PHPUnit\Framework\TestCase;
-use SugarCommerce\Embeds\Embed;
 use SugarCommerce\Embeds\Embeds;
-use SugarCommerce\Embeds\Platform;
-use SugarCommerce\Embeds\Theme;
+use SugarCommerce\Embeds\Models\Embed;
+use SugarCommerce\Embeds\Models\Platform;
+use SugarCommerce\Embeds\Models\Theme;
 
 /**
  * What reaches the page: every attribute escaped, the sandbox fixed, and a

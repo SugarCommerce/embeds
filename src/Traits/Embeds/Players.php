@@ -12,9 +12,9 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Embeds\Traits\Embeds;
 
-use SugarCommerce\Embeds\Embed;
-use SugarCommerce\Embeds\Platform;
-use SugarCommerce\Embeds\Theme;
+use SugarCommerce\Embeds\Models\Embed;
+use SugarCommerce\Embeds\Models\Platform;
+use SugarCommerce\Embeds\Models\Theme;
 
 /**
  * Trait Players

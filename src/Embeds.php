@@ -12,6 +12,9 @@ declare( strict_types=1 );
 
 namespace SugarCommerce\Embeds;
 
+use SugarCommerce\Embeds\Models\Embed;
+use SugarCommerce\Embeds\Models\Platform;
+use SugarCommerce\Embeds\Models\Theme;
 use SugarCommerce\Embeds\Traits\Embeds\Handlers;
 use SugarCommerce\Embeds\Traits\Embeds\Parsing;
 use SugarCommerce\Embeds\Traits\Embeds\Players;
